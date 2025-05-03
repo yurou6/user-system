@@ -1,86 +1,127 @@
-import React, { useState, useEffect } from 'react'
-import { supabase } from './createClient'
-import AddUserForm from './components/user/AddUserForm'
+import React, { useState, useEffect } from 'react';
+import { supabase } from './createClient';
+import AddUserForm from './components/modal/AddUserForm';
+import Pagination from './components/ui/Pagination';
+import UserCardView from './components/user/UserCardView';
+import UserTableView from './components/user/UserTableView';
 
-type GenderEnum = 'male' | 'female' | 'other'
-type OccupationEnum = 'student' | 'engineer' | 'teacher' | 'doctor' | 'other'
+type GenderEnum = 'male' | 'female' | 'other';
+type OccupationEnum = 'student' | 'engineer' | 'teacher' | 'doctor' | 'other';
 
-const DEFAULT_AVATAR_URL = 'https://joihrbpnbtkrhnyijfxf.supabase.co/storage/v1/object/public/avatars//image%209.png'
-
-interface User {
-  id: string
-  name: string
-  gender: GenderEnum
-  birthday: string
-  occupation: OccupationEnum
-  phone_number: string
-  avatar_url: string | null
+export interface User {
+  id: string;
+  name: string;
+  gender: GenderEnum;
+  birthday: string;
+  occupation: OccupationEnum;
+  phone_number: string;
+  avatar_url: string | null;
 }
 
-const App = () => {
-  const [users, setUsers] = useState<User[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isFormOpen, setIsFormOpen] = useState(false) 
+export const DEFAULT_AVATAR_URL = 'https://joihrbpnbtkrhnyijfxf.supabase.co/storage/v1/object/public/avatars//image%209.png';
+const USERS_PER_PAGE = 6;
 
+const UserDisplayPage: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [displayMode, setDisplayMode] = useState<'card' | 'table'>('card');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
+  
+  const currentUsers = users.slice(
+    (currentPage - 1) * USERS_PER_PAGE,
+    currentPage * USERS_PER_PAGE
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  
   useEffect(() => {
-    fetchUsers()
-  }, [])
+    fetchUsers();
+  }, []);
 
   const fetchUsers = async () => {
     try {
-      const { data, error } = await supabase.from('users').select('*')
-      if (error) throw error
-      console.log(data)
-      setUsers(data as User[])
+      const { data, error } = await supabase.from('users').select('*');
+      if (error) throw error;
+      console.log(data);
+      setUsers(data as User[]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '發生未知錯誤')
+      setError(err instanceof Error ? err.message : '發生未知錯誤');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleFormClose = (shouldRefresh: boolean) => {
-    setIsFormOpen(false)
     if (shouldRefresh) {
-      fetchUsers()
+      fetchUsers();
     }
-  }
+  };
   
-  if (loading) return <div>載入中...</div>
-  if (error) return <div>錯誤: {error}</div>
+  if (loading) return <div className="flex justify-center items-center h-screen">載入中...</div>;
+  if (error) return <div className="flex justify-center items-center h-screen text-red-500">錯誤: {error}</div>;
 
   return (
-    <div>
-      <div className="flex justify-center items-center my-[80px] mx-[123px] bg-[#444647] text-white rounded-[30px] h-[195px] font-semibold text-5xl">
+    <div className="container mx-auto px-4">
+      <div className="flex justify-center items-center my-[80px] bg-[#444647] text-white rounded-[30px] h-[195px] font-semibold text-5xl">
         <h1>使用者管理系統</h1>
       </div>
-      <div className="flex my-[80px] mx-[123px]">
-        <button>Card</button>
-        <button>Table</button>
-        <button>search</button>
-        <div className="container mx-auto p-4">
-          <AddUserForm onClose={handleFormClose} />
-        </div>
-      </div>
-      <ul>
-        {users.map(user => (
-          <div key={user.id}>
-            <img 
-              src={user.avatar_url || DEFAULT_AVATAR_URL} 
-              alt="頭像" 
-              style={{ width: '250px', height: '250px' }} 
-            />
-            <div>姓名: {user.name}</div>
-            <div>性別: {user.gender}</div>
-            <div>生日: {user.birthday}</div>
-            <div>職業: {user.occupation}</div>
-            <div>電話: {user.phone_number}</div>
+      
+      <div>
+        <div className="relative flex mb-8">
+          <div className="flex items-center">
+            <div>
+              <button 
+                className={`w-[140px] flex justify-center items-center gap-2 py-2 px-4`}
+                onClick={() => setDisplayMode('card')}
+              >
+                <img src="card.png" alt="Card Icon" className="w-[30px] h-[30px]" />
+                <span className="text-xl font-bold">Card</span>
+              </button>
+              {displayMode === 'card' && <div className="h-1 bg-black w-full mt-auto"></div>}
+            </div>
+            <div>
+              <button 
+                className={`w-[140px] flex justify-center items-center gap-2 py-2 px-4`}
+                onClick={() => setDisplayMode('table')}
+              >
+                <img src="table.png" alt="Table Icon" className="w-[30px] h-[30px]" />
+                <span className="text-xl font-bold">Table</span>
+              </button>
+              {displayMode === 'table' && <div className="h-1 bg-black w-full mt-auto"></div>}
+            </div>
           </div>
-        ))}
-      </ul>
+          
+          <div className='flex-1 flex justify-center items-center'>
+            <button className='w-[370px] flex justify-center items-center gap-2 mt-1 py-2 px-4 bg-[#D9D9D9] rounded-[10px]'>
+              <img src="search.png" alt="Search Icon" className="w-[18px] h-[18px]" />
+              <span className="text-xl font-bold items-center">Search</span>
+            </button>
+          </div>
+          
+          <div className="rounded-[10px]">
+            <AddUserForm onClose={handleFormClose} />
+          </div>
+        </div>
+        <div className="h-0.5 bg-black w-full -mt-8"></div>
+      </div>
+      
+      {displayMode === 'card' ? (
+        <UserCardView users={currentUsers} />
+      ) : (
+        <UserTableView users={currentUsers} />
+      )}
+      
+      <Pagination 
+        currentPage={currentPage} 
+        totalPages={totalPages} 
+        onPageChange={handlePageChange} 
+      />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default UserDisplayPage;

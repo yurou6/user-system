@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, UserPlus, Upload, Image as ImageIcon } from 'lucide-react';
+import { X, Plus, Upload, Image as ImageIcon } from 'lucide-react';
 import { supabase } from '../../createClient';
 
 /**
@@ -229,13 +229,13 @@ const AddUserForm = ({ onClose }) => {
   }, []);
 
   return (
-    <div className="font-sans">
+    <div className="font-bold">
       <button 
         onClick={toggleModal}
-        className="flex items-center gap-2 bg-[#444647] text-white font-medium py-2 px-4 rounded-md transition-colors"
+        className="flex items-center gap-1 bg-[#444647] text-white mt-1 py-2 px-4 rounded-[10px] transition-colors"
       >
-        <UserPlus size={18} />
-        新增使用者
+        <span className="text-xl font-bold">新增使用者</span>
+        <Plus size={18} />
       </button>
 
       {isOpen && (
@@ -416,7 +416,7 @@ const AddUserForm = ({ onClose }) => {
         </div>
       )}
 
-      {users.length > 0 && (
+      {/* {users.length > 0 && (
         <div className="mt-6">
           <div className="bg-white shadow-md rounded-md overflow-hidden">
             <table className="min-w-full divide-y divide-gray-200">
@@ -457,7 +457,7 @@ const AddUserForm = ({ onClose }) => {
             </table>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
