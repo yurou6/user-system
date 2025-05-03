@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { supabase } from './createClient'
+import AddUserForm from './components/user/AddUserForm'
 
 type GenderEnum = 'male' | 'female' | 'other'
 type OccupationEnum = 'student' | 'engineer' | 'teacher' | 'doctor' | 'other'
@@ -20,6 +21,7 @@ const App = () => {
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isFormOpen, setIsFormOpen] = useState(false) 
 
   useEffect(() => {
     fetchUsers()
@@ -37,13 +39,30 @@ const App = () => {
       setLoading(false)
     }
   }
+
+  const handleFormClose = (shouldRefresh: boolean) => {
+    setIsFormOpen(false)
+    if (shouldRefresh) {
+      fetchUsers()
+    }
+  }
   
   if (loading) return <div>載入中...</div>
   if (error) return <div>錯誤: {error}</div>
 
   return (
     <div>
-      <h1>使用者管理系統</h1>
+      <div className="flex justify-center items-center my-[80px] mx-[123px] bg-[#444647] text-white rounded-[30px] h-[195px] font-semibold text-5xl">
+        <h1>使用者管理系統</h1>
+      </div>
+      <div className="flex my-[80px] mx-[123px]">
+        <button>Card</button>
+        <button>Table</button>
+        <button>search</button>
+        <div className="container mx-auto p-4">
+          <AddUserForm onClose={handleFormClose} />
+        </div>
+      </div>
       <ul>
         {users.map(user => (
           <div key={user.id}>
