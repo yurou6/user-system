@@ -66,7 +66,7 @@ const UserDisplayPage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4">
-      <div className="flex justify-center items-center my-[80px] bg-[#444647] text-white rounded-[30px] h-[195px] font-semibold text-5xl">
+      <div className="flex justify-center items-center mt-[60px] mb-12 bg-[#444647] text-white rounded-[30px] h-[150px] font-semibold text-4xl">
         <h1>使用者管理系統</h1>
       </div>
       
