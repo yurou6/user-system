@@ -52,8 +52,9 @@ const UserDisplayPage: React.FC = () => {
     try {
       const { data, error } = await supabase.from('users').select('*');
       if (error) throw error;
+      const reversedData = [...(data as User[])].reverse();
       console.log(data);
-      setUsers(data as User[]);
+      setUsers(reversedData);
       setAllUsers(data as User[]);
     } catch (err) {
       setError(err instanceof Error ? err.message : '發生未知錯誤');
