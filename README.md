@@ -1,46 +1,73 @@
-# Getting Started with Create React App
+# 🧑‍💼 使用者管理系統（React + Supabase）
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+這是一個以 React 製作的使用者管理系統，支援圖片上傳、分頁瀏覽、職業分類、搜尋（含 debounce）、表格/卡片切換、編輯刪除功能等，並使用 Supabase 作為後端儲存資料。
 
-## Available Scripts
+---
 
-In the project directory, you can run:
+## ✨ 功能特色
 
-### `npm start`
+- ✅ 使用者資訊顯示（姓名、性別、生日、職業、電話、頭像）
+- ✅ 支援圖片上傳與預設大頭貼顯示
+- ✅ 卡片 / 表格視圖切換（含分頁，每頁 6 筆）
+- ✅ 可新增、編輯、刪除使用者
+- ✅ 可根據關鍵字搜尋使用者（實作 debounce）
+- ✅ 資料透過 Supabase 儲存，重新整理或換電腦登入後仍能保留
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 🗃️ 技術架構
 
-### `npm test`
+- 前端框架：React (Create React App)
+- UI Library：可使用 Tailwind
+- 後端資料庫：Supabase（PostgreSQL + RESTful API）
+- 圖像儲存：Supabase Storage
+- 資料持久化：從 Supabase 即時拉取，瀏覽器無需本地儲存
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## 🧪 畫面預覽
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+> 🔽 專案截圖
+![畫面預覽](https://github.com/user-attachments/assets/ecbd32c6-84e0-43ec-bd18-47145e8a9587)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 快速開始
 
-### `npm run eject`
+### 1️⃣ 安裝依賴
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+npm install
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 2️⃣ 設定環境變數 .env
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+請將 Supabase 專案金鑰與 URL 填入以下檔案：
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```bash
+REACT_APP_SUPABASE_URL=your-supabase-url
+REACT_APP_SUPABASE_ANON_KEY=your-anon-key
+```
 
-## Learn More
+### 3️⃣ 啟動專案
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash
+npm start
+```
+打開瀏覽器造訪 http://localhost:3000
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
+
+## 🧹 資料儲存說明
+所有使用者資料都儲存在 Supabase：
+
+使用 Supabase Database 儲存使用者資料欄位（如姓名、性別等）
+
+使用 Supabase Storage 儲存上傳圖像
+
+每次載入頁面時從 Supabase 讀取資料
+
+支援增、修、刪操作皆透過 Supabase API 完成
+
+## 🔍 測試項目
+👉 測試功能清單詳見：https://legend-spring-e2f.notion.site/1e958367bfbb80deaaebf480eadb7015?pvs=4
