@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from './createClient';
 import AddUserForm from './components/modal/AddUserForm';
 import Pagination from './components/ui/Pagination';
 import UserCardView from './components/user/UserCardView';
 import UserTableView from './components/user/UserTableView';
+import Fuse from 'fuse.js';
 
 type GenderEnum = 'male' | 'female' | 'other';
 type OccupationEnum = 'student' | 'engineer' | 'teacher' | 'doctor' | 'other';
@@ -23,16 +24,21 @@ const USERS_PER_PAGE = 6;
 
 const UserDisplayPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [displayMode, setDisplayMode] = useState<'card' | 'table'>('card');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState(''); 
+
   const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
   
   const currentUsers = users.slice(
     (currentPage - 1) * USERS_PER_PAGE,
     currentPage * USERS_PER_PAGE
   );
+
+  const searchTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -48,6 +54,7 @@ const UserDisplayPage: React.FC = () => {
       if (error) throw error;
       console.log(data);
       setUsers(data as User[]);
+      setAllUsers(data as User[]);
     } catch (err) {
       setError(err instanceof Error ? err.message : '發生未知錯誤');
     } finally {
@@ -59,6 +66,34 @@ const UserDisplayPage: React.FC = () => {
     if (shouldRefresh) {
       fetchUsers();
     }
+  };
+
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    
+    if (searchTimerRef.current) {
+      clearTimeout(searchTimerRef.current);
+    }
+    
+    searchTimerRef.current = setTimeout(() => {
+      if (value.trim() === '') {
+        setUsers(allUsers);
+        setCurrentPage(1);
+        return;
+      }
+      
+      const options = {
+        keys: ['name', 'occupation'], 
+        threshold: 0.3,
+        ignoreLocation: true,
+      };
+      
+      const fuse = new Fuse(allUsers, options);
+      const result = fuse.search(value);
+      
+      setUsers(result.map(item => item.item));
+      setCurrentPage(1);
+    }, 300); 
   };
   
   if (loading) return <div className="flex justify-center items-center h-screen">載入中...</div>;
@@ -96,10 +131,24 @@ const UserDisplayPage: React.FC = () => {
           </div>
           
           <div className='flex-1 flex justify-center items-center'>
-            <button className='w-[370px] flex justify-center items-center gap-2 mt-1 py-2 px-4 bg-[#D9D9D9] rounded-[10px]'>
+            <div className='relative w-[300px] flex items-center gap-2 mt-1 py-2 px-4 bg-[#D9D9D9] rounded-[10px]'>
               <img src="search.png" alt="Search Icon" className="w-[18px] h-[18px]" />
-              <span className="text-xl font-bold items-center">Search</span>
-            </button>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="搜尋使用者或職業..."
+                className="w-full bg-transparent outline-none text-xl"
+              />
+              {searchTerm && (
+                <button 
+                  className="absolute right-3"
+                  onClick={() => handleSearch('')}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
           </div>
           
           <div className="rounded-[10px]">
