@@ -30,6 +30,7 @@ const UserDisplayPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState(''); 
+  const [noResultsFound, setNoResultsFound] = useState(false);
 
   const totalPages = Math.ceil(users.length / USERS_PER_PAGE);
   
@@ -79,6 +80,7 @@ const UserDisplayPage: React.FC = () => {
     searchTimerRef.current = setTimeout(() => {
       if (value.trim() === '') {
         setUsers(allUsers);
+        setNoResultsFound(false);
         setCurrentPage(1);
         return;
       }
@@ -94,6 +96,7 @@ const UserDisplayPage: React.FC = () => {
       
       setUsers(result.map(item => item.item));
       setCurrentPage(1);
+      setNoResultsFound(result.length === 0);
     }, 300); 
   };
   
@@ -131,7 +134,7 @@ const UserDisplayPage: React.FC = () => {
             </div>
           </div>
           
-          <div className='flex-1 flex justify-center items-center'>
+          <div className='flex-1 flex justify-center items-center flex-col'>
             <div className='relative w-[300px] flex items-center gap-2 mt-1 py-2 px-4 bg-[#D9D9D9] rounded-[10px]'>
               <img src="search.png" alt="Search Icon" className="w-[18px] h-[18px]" />
               <input
@@ -157,6 +160,12 @@ const UserDisplayPage: React.FC = () => {
           </div>
         </div>
         <div className="h-0.5 bg-black w-full -mt-8"></div>
+        {searchTerm && noResultsFound && (
+          <div className="mt-8 text-gray-500 text-center">
+            <p className="text-xl">無資料</p>
+            <p className="text-sm mt-2">找不到符合「{searchTerm}」的結果</p>
+          </div>
+        )}
       </div>
       
       {displayMode === 'card' ? (
