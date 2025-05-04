@@ -234,7 +234,7 @@ const AddUserForm = ({ onClose }) => {
         onClick={toggleModal}
         className="flex items-center gap-1 bg-[#444647] text-white mt-1 py-2 px-4 rounded-[10px] transition-colors"
       >
-        <span className="text-xl font-bold">新增使用者</span>
+        <span className="text-[18px] font-bold">新增使用者</span>
         <Plus size={18} />
       </button>
 
@@ -415,49 +415,6 @@ const AddUserForm = ({ onClose }) => {
           </div>
         </div>
       )}
-
-      {/* {users.length > 0 && (
-        <div className="mt-6">
-          <div className="bg-white shadow-md rounded-md overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">頭像</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">姓名</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">性別</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">生日</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">職業</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">電話號碼</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {users.map((user) => (
-                  <tr key={user.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center">
-                        {user.avatar_url ? (
-                          <img 
-                            src={user.avatar_url} 
-                            alt={`${user.name}的頭像`} 
-                            className="w-full h-full object-cover" 
-                          />
-                        ) : (
-                          <ImageIcon className="text-gray-400" size={18} />
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.gender}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.birthday}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.occupation}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.phone_number}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )} */}
     </div>
   );
 };

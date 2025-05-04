@@ -110,9 +110,15 @@ const UserDisplayPage: React.FC = () => {
       </div>
       
       {displayMode === 'card' ? (
-        <UserCardView users={currentUsers} />
+        <UserCardView 
+          users={currentUsers}
+          onClose={handleFormClose}
+        />
       ) : (
-        <UserTableView users={currentUsers} />
+        <UserTableView 
+          users={currentUsers}
+          onClose={handleFormClose}
+        />
       )}
       
       <Pagination 
